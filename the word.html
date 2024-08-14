@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title></title>
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 24px;
+    color: white;
+  }
+  .message {
+    opacity: 0; /* 初始透明度为0 */
+    transition: opacity 1s ease-in-out; /* 淡入淡出效果 */
+    display: none; /* 初始不显示 */
+  }
+</style>
+</head>
+<body>
+  <audio autoplay loop>
+    <source src="Haru Haru1.m4a" type="audio/aac">
+    Your browser does not support the audio element.
+  </audio>
+
+<div id="message" class="message">Hello</div> <!-- 初始显示第一条消息 -->
+<div id="countdown" style="display: none;">3</div> <!-- 倒计时 -->
+
+<script>
+  const messages = [
+    "您好",
+    "我是Midcloud",
+    "邀请您欣赏一场简陋的烟花表演",
+    "祝您永远开开心心、快快乐乐！"
+  ];
+  const messageElement = document.getElementById('message');
+  const countdownElement = document.getElementById('countdown');
+
+  let currentMessageIndex = 0;
+  function showMessage(index) {
+    if (index < messages.length) {
+      // 先隐藏当前消息
+      messageElement.style.display = 'none';
+      messageElement.style.opacity = '0';
+      
+      // 延迟2秒后显示下一条消息
+      setTimeout(() => {
+        messageElement.textContent = messages[index];
+        messageElement.style.display = 'block'; // 显示消息
+        messageElement.style.opacity = '1'; // 淡入
+      }, 2000);
+      
+      // 6秒后（2秒隐藏+2秒淡入+2秒显示）淡出并继续下一条消息
+      setTimeout(() => {
+        messageElement.style.opacity = '0'; // 开始淡出
+        setTimeout(() => {
+          showMessage(index + 1); // 淡出后显示下一条消息
+        }, 2000);
+      }, 5000);
+    }
+  }
+
+  function startCountdown() {
+    // 所有消息显示完毕后，延迟2秒开始倒计时
+    setTimeout(() => {
+      let timeLeft = 3;
+      countdownElement.style.display = 'block'; // 显示倒计时
+      const intervalId = setInterval(() => {
+        countdownElement.textContent = timeLeft;
+        if (timeLeft > 0) {
+          timeLeft--;
+        } else {
+          clearInterval(intervalId); // 倒计时结束
+          window.location.href = '烟花1.html'; // 跳转到烟花页面
+        }
+      }, 1000);
+    }, (messages.length + 1) * 6000); // 计算所有消息显示完成的时间
+  }
+
+  showMessage(0); // 显示第一条消息
+  startCountdown(); // 开始倒计时
+</script>
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爱心</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            height: 100%;
+            width: 100%;
+            display: flex ;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: pink;
+        }
+        #button {
+            padding: 10px 20px;
+            font-size: 20px;
+            color: white;
+            background-color: transparent;
+            border: 2px solid white;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        #heart, #photo1, #photo2 {
+            display: none;
+        }
+        #heart {
+            width: 100px;
+            height: 100px;
+            background-color: tomato;
+            animation: heartbeat 1.09s infinite;
+            box-shadow: 10px 10px 50px papayawhip;
+        }
+        #heart:before, #heart:after {
+            content: "";
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: tomato;
+        }
+        #heart:after {
+            top: 0px;
+            left: 50px;
+        }
+        @keyframes heartbeat {
+            0% {transform: scale(1) rotate(-45deg);}
+            50%{transform: scale(1.4) rotate(-45deg);}
+            100%{transform: scale(1)  rotate(-45deg);}
+        }
+
+        #photo1 {
+            width: 150px;
+            animation: slide-in1 6s ;
+            animation-fill-mode: forwards;
+            border-radius: 20px;
+        }
+
+        #photo2 {
+            width: 150px;
+            animation: slide-in2  6s ;
+            animation-fill-mode: forwards;
+            border-radius: 20px;
+        }
+        #overlay {
+            display: none; 
+            position: fixed;
+            top: 0; left: 0; 
+            width: 100%; 
+            height: 100%;
+            background-color: black;
+            z-index: 100;
+            transition: opacity 10ms ease;  
+        }
+        #progress-container {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 102; 
+       }
+
+        #progress-bar {
+            width: 0%;
+            height: 30px;
+            background-color: white;
+            border-radius: 15px;
+            transition: width 10s ease;
+        }
+        @keyframes slide-in1 {
+            from {
+                transform: translate(-2000px, -50%);
+            }
+            to {
+                transform: translate(-100px,50%); 
+            }
+        }
+        @keyframes slide-in2 {
+            from {
+                transform: translate(2000px, -50%); 
+            }
+            to {
+                transform: translate(100px,-50%); 
+            }
+        }
+     </style>
+</head>
+<body>
+    <button id="button">点击</button>
+    <audio id="music" src="Haru Haru .m4a" preload="auto" style="display:none;"></audio> 
+    <div id="heart"></div> 
+    <img id="photo1" src="2.jpg" alt="Photo 1">
+    <img id="photo2" src="1.jpg" alt="Photo 2">
+    <div id="overlay"></div>
+    <div id="progress-container" style="display: none; position: fixed; transform: translate(-50%, -50%);">
+        <div id="progress-bar" style="width: 0%; height: 20px; background-color: white; border-radius: 15px;"></div>
+        <p style="color: white; margin-top: 10px; text-align: center;">loading...</p>
+    </div>
+    <script>
+        document.getElementById('button').addEventListener('click', function() {
+            var music = document.getElementById('music');
+            music.play();
+            this.style.display = 'none';
+            var heart = document.getElementById('heart');
+            var photo1 = document.getElementById('photo1');
+            var photo2 = document.getElementById('photo2');
+            heart.style.display = 'block';
+            photo1.style.display = 'block';
+            photo2.style.display = 'block';  
+            document.body.style.backgroundColor = 'pink';
+        });
+var overlay = document.getElementById('overlay');
+photo2.addEventListener('animationend', function() {
+    overlay.style.display = 'block';
+    overlay.style.opacity = '0';  
+    let opacity = 0;
+    const interval = setInterval(function() {
+        opacity += 0.1; 
+        if (opacity > 1) opacity = 1; 
+        overlay.style.opacity = opacity.toString();
+        if (opacity >= 1) {
+            clearInterval(interval);
+        }
+    }, 100);
+});
+var progressBar = document.getElementById('progress-bar');
+var progressContainer = document.getElementById('progress-container');
+    overlay.addEventListener('transitionend', function(event) {
+    if (event.propertyName === 'opacity' && overlay.style.opacity === '1') {
+        progressContainer.style.display = 'block';  
+        let width = 0;
+        const interval = setInterval(function() {
+            width += 1; 
+            if (width > 150) width = 150;  
+            progressBar.style.width = width + '%';  
+            if (width >= 150) {
+                clearInterval(interval);
+                setTimeout(function() {
+                    window.location.href = "the word.html";  
+                },10000);  
+            }
+        }, 100);
+    }
+});
+    </script>
+</body>
+</html>
